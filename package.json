@@ -4,13 +4,13 @@
   "scripts": {
     "start": "node index.js",
     "server": "nodemon index.js",
-    "migrate:dev": "knex migrate:latest",
-    "rollback:dev": "knex migrate:rollback",
-    "seed:dev": "knex seed:run",
-    "migrate:prod": "heroku run knex migrate:latest -a build-week-unit4-morgan",
-    "rollback:prod": "heroku run knex migrate:rollback -a build-week-unit4-morgan",
-    "database:prod": "heroku pg:psql -a build-week-unit4-morgan",
-    "seed:prod": "heroku run knex seed:run -a build-week-unit4-morgan",
+    "migrate": "knex migrate:latest",
+    "rollback": "knex migrate:rollback",
+    "seed": "knex seed:run",
+    "migrate:h": "heroku run knex migrate:latest -a build-week-unit4-morgan",
+    "rollback:h": "heroku run knex migrate:rollback -a build-week-unit4-morgan",
+    "database:h": "heroku pg:psql -a build-week-unit4-morgan",
+    "seed:h": "heroku run knex seed:run -a build-week-unit4-morgan",
     "test": "cross-env NODE_ENV=testing jest --verbose --runInBand",
     "deploy": "git push heroku main"
   },
@@ -37,6 +37,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Build-Week-Secret-Family-Recipes-01/back-end.git"
+    "url": "git+https://github.com/bloominstituteoftechnology/build-week-scaffolding-node.git"
   }
 }
