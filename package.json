@@ -12,7 +12,8 @@
     "database:h": "heroku pg:psql -a build-week-unit4-morgan",
     "seed:h": "heroku run knex seed:run -a build-week-unit4-morgan",
     "test": "cross-env NODE_ENV=testing jest --verbose --runInBand",
-    "deploy": "git push heroku main"
+    "deploy": "git push heroku main",
+    "resetdb": "npm run rollback && npm run migrate && npm run seed"
   },
   "engines": {
     "node": "16.13.2"

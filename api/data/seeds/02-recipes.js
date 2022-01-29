@@ -1,5 +1,5 @@
-exports.seed = function (knex, Promise) {
-  return knex("recipes").insert([
+exports.seed = async function (knex) {
+  await knex("recipes").insert([
     {
       title: "PB&J Sandwich",
       source: "Grandma Jane",
@@ -59,7 +59,7 @@ exports.seed = function (knex, Promise) {
         { step: 2, text: "Top with whipped cream" },
         { step: 3, text: "garnish with cherries" },
       ],
-      user_id: 3
+      user_id: 3,
     },
   ]);
 };

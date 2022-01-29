@@ -2,17 +2,17 @@ exports.up = async (knex) => {
   await knex.schema
     .createTable("users", (table) => {
       table.increments("user_id");
-      table.string("username", 200).notNullable();
-      table.string("password", 200).notNullable();
+      table.text("username", 200).notNullable();
+      table.text("password", 200).notNullable();
       table.timestamps(false, true);
     })
     .createTable("recipes", (table) => {
       table.increments("recipe_id");
-      table.string("title").notNullable();
-      table.string("source");
-      table.string("ingredients").notNullable();
-      table.string("instructions").notNullable();
-      table.string("image");
+      table.text("title").notNullable();
+      table.text("source");
+      table.text("ingredients").notNullable();
+      table.text("instructions").notNullable();
+      table.text("image");
       table
         .integer("user_id")
         .unsigned()
@@ -24,7 +24,7 @@ exports.up = async (knex) => {
     })
     .createTable("categories", (table) => {
       table.increments("category_id");
-      table.string("category_name").notNullable();
+      table.text("category_name").notNullable();
     })
     .createTable("recipe_categories", (table) => {
       table.increments("recipe_category_id");
