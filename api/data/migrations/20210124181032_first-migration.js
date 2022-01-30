@@ -4,7 +4,7 @@ exports.up = async (knex) => {
       table.increments("user_id");
       table.text("username", 200).notNullable();
       table.text("password", 200).notNullable();
-      table.text("permissions").defaultTo("user");
+      table.text("permissions");
       table.timestamps(false, true);
     })
     .createTable("recipes", (table) => {

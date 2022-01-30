@@ -1,12 +1,15 @@
 
 Test Accounts:
-- username: test | pw: test
-- username: test1 | pw: test
-- username: test2 | pw: test
+- username: admin | pw: test | admin
+- username: user1 | pw: test
+- username: user2 | pw: test
 
 Endpoints:
 - [Base URL] https://secret-family-recipes-01.herokuapp.com/
-- [GET] "/api/users/" - returns an array with all users (user_id, username, password)
+- [GET] "/api/users/" - returns an array with all users (user_id, username, password, permissions) - must be a logged in admin to view
+- [GET] "/api/users/:user_id" - returns data for that user_id (user_id, username, password, permissions) - must be a logged in admin to view
+- [POST] "/api/auth/register" - returns user data for new account (user_id, username, password, permissions)
+- [POST] "/api/auth/login" - returns user data for logged in account (user_id, username, password, permissions)
 
 
 ----------------------------------- BuildWeek Help Info -----------------------------------

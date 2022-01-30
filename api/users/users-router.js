@@ -1,8 +1,8 @@
 const router = require("express").Router();
 const Users = require("./users-model.js");
-const { restricted, only } = require("../auth/auth-middleware.js");
+const { permissionsCheck } = require("../auth/auth-middleware.js");
 
-router.get("/", (req, res, next) => {
+router.get("/", permissionsCheck("admin"), (req, res, next) => {
   Users.findAllUsers()
     .then((users) => {
       res.status(200).json(users);
@@ -11,7 +11,8 @@ router.get("/", (req, res, next) => {
 });
 
 router.get("/:user_id", (req, res, next) => {
-  Users.findById(req.params.user_id)
+  const user_id = req.params.user_id;
+  Users.findBy({ user_id })
     .then((user) => {
       res.json(user);
     })

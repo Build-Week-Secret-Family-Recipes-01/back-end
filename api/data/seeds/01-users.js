@@ -1,18 +1,19 @@
 exports.seed = async function (knex) {
   await knex("users").insert([
     {
-      username: "test",
-      password: "$2a$08$4tW6aeJVjFMSscGqXdVwAeB4233k9WDftiiy4EAOP5sWojwwv/qai",
-      permissions: "admin" // plain text password is test
+      username: "admin",
+      password: "$2a$08$dLCwL5TYd7.DzLRL6b8hUOM1OQ5BRTGx0zDXrXeKzJ7i26jPVgFj2", // plain text password is test
+      permissions: "admin"
     },
     {
-      username: "test1",
-      password: "$2a$08$4tW6aeJVjFMSscGqXdVwAeB4233k9WDftiiy4EAOP5sWojwwv/qai",
-      permissions: "user" // plain text password is test
+      username: "user1",
+      password: "$2a$08$dLCwL5TYd7.DzLRL6b8hUOM1OQ5BRTGx0zDXrXeKzJ7i26jPVgFj2", // plain text password is test
+      permissions: "user"
     },
     {
-      username: "test2",
-      password: "$2a$08$4tW6aeJVjFMSscGqXdVwAeB4233k9WDftiiy4EAOP5sWojwwv/qai", // plain text password is test
+      username: "user2",
+      password: "$2a$08$dLCwL5TYd7.DzLRL6b8hUOM1OQ5BRTGx0zDXrXeKzJ7i26jPVgFj2", // plain text password is test
+      permissions: "user"
     },
   ]);
 };

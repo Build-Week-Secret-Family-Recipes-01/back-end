@@ -2,7 +2,7 @@ const dbConfig = require("../data/db-config");
 const { JWT_SECRET } = require("../secrets");
 const jwt = require("jsonwebtoken");
 
-const restricted = (req, res, next) => {
+const loggedInCheck = (req, res, next) => {
   const token = req.headers.authorization;
   if (!token) {
     next({ status: 401, message: "Token required" });
@@ -18,11 +18,26 @@ const restricted = (req, res, next) => {
   }
 };
 
-const only = (role_name) => (req, res, next) => {
-  if (req.decodedJwt.role_name === role_name) {
+const permissionsCheck = (permissions) => (req, res, next) => {
+  if (req.decodedJwt.permissions === permissions) {
     next();
   } else {
-    next({ status: 403, message: "This is not for you" });
+    next({ status: 403, message: "You are not authorized to view this data" });
+  }
+};
+
+const checkUsernameUnique = async (req, res, next) => {
+  try {
+    const usernameTaken = await dbConfig("users")
+      .where("username", req.body.username)
+      .first();
+    if (usernameTaken) {
+      next({ status: 401, message: "Username taken" });
+    } else {
+      next();
+    }
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -41,29 +56,20 @@ const checkUsernameExists = async (req, res, next) => {
   }
 };
 
-const validateRoleName = (req, res, next) => {
+const validatePermissionsName = (req, res, next) => {
   try {
-    if (req.body.role_name) {
-      req.body.role_name = req.body.role_name.toLowerCase().trim();
-      const role_name = req.body.role_name;
+    if (req.body.permissions) {
+      req.body.permissions = req.body.permissions.toLowerCase().trim();
+      const permissions = req.body.permissions;
 
-      if (role_name === "admin") {
-        next({ status: 422, message: "Role name can not be admin" });
-      } else if (role_name.length > 32) {
-        next({
-          status: 422,
-          message: "Role name can not be longer than 32 chars",
-        });
-      } else if (role_name.length === 0) {
-        req.body.role_name = "student";
+      if (permissions.length === 0) {
+        req.body.permissions = "user";
         next();
-      } else if (role_name === "student" || role_name === "instructor") {
-        next();
-      } else {
+      } else if (permissions === "admin" || permissions === "user") {
         next();
       }
     } else {
-      req.body.role_name = "student";
+      req.body.permissions = "user";
       next();
     }
   } catch (err) {
@@ -72,8 +78,9 @@ const validateRoleName = (req, res, next) => {
 };
 
 module.exports = {
-  restricted,
+  loggedInCheck,
+  permissionsCheck,
+  checkUsernameUnique,
   checkUsernameExists,
-  validateRoleName,
-  only,
+  validatePermissionsName,
 };
