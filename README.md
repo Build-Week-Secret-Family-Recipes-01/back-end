@@ -6,6 +6,8 @@ Test Accounts:
 
 Endpoints:
 - [Base URL] https://secret-family-recipes-01.herokuapp.com/
+- [GET] "/api/users/" - returns an array with all users (user_id, username, password)
+
 
 ----------------------------------- BuildWeek Help Info -----------------------------------
 # Build Week Scaffolding
