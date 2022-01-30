@@ -7,7 +7,7 @@ Test Accounts:
 Endpoints:
 - [Base URL] https://secret-family-recipes-01.herokuapp.com/
 
-
+----------------------------------- BuildWeek Help Info -----------------------------------
 # Build Week Scaffolding
 
 First READ these instructions to get an overview of what's involved in scaffolding an Express + PostgreSQL app that deploys to Heroku.
