@@ -10,8 +10,8 @@ Endpoints:
 - [GET] "/api/users/:user_id" - returns data for that user_id (user_id, username, password, permissions) - **must be a logged in admin to view
 - [POST] "/api/auth/register" - returns user data for new account (user_id, username, password, permissions)
 - [POST] "/api/auth/login" - returns user data for logged in account (user_id, username, password, permissions)
+- [PUT] "/api/users/:user_id" - returns updated user data for that user_id **must send in username, permissions
 
-- [PUT] < need an endpoint to update user account (to turn "user" into "admin") >
 - [POST] < need an endpoint to post a new recipe >
 - [PUT] < need an endpoint to update an existing recipe >
 - [GET] < need an endpoint to get all of my recipes >

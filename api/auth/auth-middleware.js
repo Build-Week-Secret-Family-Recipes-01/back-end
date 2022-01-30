@@ -32,7 +32,11 @@ const checkUsernameUnique = async (req, res, next) => {
       .where("username", req.body.username)
       .first();
     if (usernameTaken) {
-      next({ status: 401, message: "Username taken" });
+      if (usernameTaken.user_id.toString() === req.params.user_id) {
+        next();
+      } else {
+        next({ status: 401, message: "Username taken" });
+      }
     } else {
       next();
     }
@@ -67,10 +71,28 @@ const validatePermissionsName = (req, res, next) => {
         next();
       } else if (permissions === "admin" || permissions === "user") {
         next();
+      } else {
+        next({ status: 401, message: "Invalid permissions status" });
       }
     } else {
       req.body.permissions = "user";
       next();
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+const validateUserId = async (req, res, next) => {
+  try {
+    const possibleId = await dbConfig("users")
+      .where("user_id", req.params.user_id)
+      .first();
+
+    if (possibleId) {
+      next();
+    } else {
+      next({ status: 404, message: "User not found" });
     }
   } catch (err) {
     next(err);
@@ -83,4 +105,5 @@ module.exports = {
   checkUsernameUnique,
   checkUsernameExists,
   validatePermissionsName,
+  validateUserId,
 };
