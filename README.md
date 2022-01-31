@@ -12,6 +12,7 @@ Endpoints:
 - [POST] "/api/auth/login" - returns user data for logged in account (user_id, username, password, permissions)
 - [PUT] "/api/users/:user_id" - returns updated user data for that user_id - **must send in username, permissions
 - [GET] "api/recipes" - returns array of ALL recipes in the db
+- need a logout endpoint
 
 - [POST] < need an endpoint to post a new recipe >
 - [PUT] < need an endpoint to update an existing recipe >
