@@ -21,11 +21,14 @@ async function getSteps(recipe_id) {
 }
 
 async function getRecipe(filter) {
-  const recipe = await db("recipes").where(filter).first();
+  const recipe = await db("recipes as r")
+  .join("steps as s")
+  // filter by recipeid, get an array with redundant data - use JS to hammer that into place - join all 4 tables, then filter
+  .where(filter).first();
   recipe.steps = await getSteps(recipe.recipe_id);
-  recipe.steps.forEach(async step => {
-    step.ingredients = await getIngredients(step.step_id);
-  });
+  // recipe.steps.forEach(async step => {
+  //   step.ingredients = getIngredients(step.step_id);
+  // });
   return recipe;
 }
 

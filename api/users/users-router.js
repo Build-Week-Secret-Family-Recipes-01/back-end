@@ -3,14 +3,14 @@ const { BCRYPT_ROUNDS } = require("../secrets");
 const bcrypt = require("bcryptjs");
 const Users = require("./users-model.js");
 const {
+  loggedInCheck,
   permissionsCheck,
   validatePermissionsName,
   checkUsernameUnique,
   validateUserId,
 } = require("../auth/auth-middleware.js");
 
-// router.get("/", permissionsCheck("admin"), (req, res, next) => {
-router.get("/", (req, res, next) => {
+router.get("/", loggedInCheck, permissionsCheck("admin"), (req, res, next) => {
   Users.findAllUsers()
     .then((users) => {
       res.status(200).json(users);
