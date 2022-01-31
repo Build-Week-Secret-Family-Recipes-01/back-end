@@ -11,8 +11,6 @@ exports.up = async (knex) => {
       table.increments("recipe_id");
       table.text("title").notNullable();
       table.text("source");
-      table.text("ingredients").notNullable();
-      table.text("instructions").notNullable();
       table.text("image");
       table
         .integer("user_id")
@@ -45,10 +43,50 @@ exports.up = async (knex) => {
         .inTable("categories")
         .onDelete("RESTRICT")
         .onUpdate("RESTRICT");
+    })
+    .createTable("ingredients", (table) => {
+      table.increments("ingredient_id");
+      table.text("ingredient_name").notNullable().unique();
+    })
+    .createTable("steps", (table) => {
+      table.increments("step_id");
+      table.text("step_text").notNullable();
+      table.integer("step_number").notNullable();
+      table
+        .integer("recipe_id")
+        .unsigned()
+        .notNullable()
+        .references("recipe_id")
+        .inTable("recipes")
+        .onDelete("RESTRICT")
+        .onUpdate("RESTRICT");
+    })
+    .createTable("steps_ingredients", (table) => {
+      table.increments("step_ingredient_id");
+      table
+        .integer("step_id")
+        .unsigned()
+        .notNullable()
+        .references("step_id")
+        .inTable("steps")
+        .onDelete("RESTRICT")
+        .onUpdate("RESTRICT");
+      table
+        .integer("ingredient_id")
+        .unsigned()
+        .notNullable()
+        .references("ingredient_id")
+        .inTable("ingredients")
+        .onDelete("RESTRICT")
+        .onUpdate("RESTRICT");
+      table.text("quantity");
     });
 };
 
 exports.down = async (knex) => {
+  await knex.schema.dropTableIfExists("steps_ingredients");
+  await knex.schema.dropTableIfExists("steps");
+  await knex.schema.dropTableIfExists("ingredients");
   await knex.schema.dropTableIfExists("recipe_categories");
   await knex.schema.dropTableIfExists("categories");
   await knex.schema.dropTableIfExists("recipes");
