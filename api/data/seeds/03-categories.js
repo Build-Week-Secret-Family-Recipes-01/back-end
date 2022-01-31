@@ -1,40 +1,40 @@
 exports.seed = async function (knex) {
   await knex("categories").insert([
     {
-      category_name: "Breakfast"
+      category_name: "breakfast"
     },
     {
-      category_name: "Italian"
+      category_name: "italian"
     },
     {
-      category_name: "Mexican"
+      category_name: "mexican"
     },
     {
-      category_name: "Mediterranean"
+      category_name: "mediterranean"
     },
     {
-      category_name: "Indian"
+      category_name: "indian"
     },
     {
-      category_name: "Chinese"
+      category_name: "chinese"
     },
     {
-      category_name: "Korean"
+      category_name: "korean"
     },
     {
-      category_name: "African"
+      category_name: "african"
     },
     {
-      category_name: "Healthy"
+      category_name: "healthy"
     },
     {
-      category_name: "Dessert"
+      category_name: "dessert"
     },
     {
-      category_name: "Sandwiches"
+      category_name: "sandwiches"
     },
     {
-      category_name: "Vegetarian"
+      category_name: "vegetarian"
     },
   ]);
 };
