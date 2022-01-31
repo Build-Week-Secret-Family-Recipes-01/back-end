@@ -17,8 +17,9 @@ Endpoints:
 - [POST] < need an endpoint to post a new recipe >
 - [PUT] < need an endpoint to update an existing recipe >
 - [GET] < need an endpoint to get all of my recipes >
-- [GET] < need an endpoint to get a recipe by title >
+- [GET] IN PROGRESS >>> can get recipe, but ingredients are missing < need an endpoint to get a recipe by title >
 - [GET] < need an endpoint to get recipes by category >
+- (optional)[DELETE] < need an endpoint to delete a recipe >
 
 
 ----------------------------------- BuildWeek Help Info -----------------------------------
