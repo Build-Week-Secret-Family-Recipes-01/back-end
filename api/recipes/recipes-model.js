@@ -9,6 +9,8 @@ async function addRecipe(recipe) {
   const [id] = await db("recipes").insert(recipe, [
     "recipe_id"
   ]);
+  // you need a transaction > will fill in all tables - WRAP the whole thing into the transaction syntax
+
   console.log(id.recipe_id);
   return getRecipeById(id.recipe_id);
 }
@@ -30,28 +32,30 @@ function buildRecipe(rawData) {
     recipe.categories.push(row.category_name);
   })
 
-  // ***** cutting repeated steps off of RawData (caused by categories column) >>> DOESNT WORK!
-  const useData = [];
+  // cutting repeated steps off of RawData (caused by categories column)
+  let useData = [];
   if(recipe.categories.length > 1) {
-    let x = rawData.length / recipe.categories.length;
-    const useData = [];
-    for (let i = 0; i < x; i++){
-      useData.push(rawData[i]);
+    let category = recipe.categories[0];
+    for (let i = 0; i < rawData.length; i++){
+      if (rawData[i].category_name === category) {
+        useData.push(rawData[i])
+      }
     }
   } else {
-    useData.push(rawData);
+    useData = rawData;
   }
+  console.log(useData)
 
   // push steps to recipe
-  for (let i = 0; i < rawData.length; i++) {
+  for (let i = 0; i < useData.length; i++) {
     let pushStep = () => {
       let step = {
-        step_number: rawData[i].step_number,
-        step_text: rawData[i].step_text,
+        step_number: useData[i].step_number,
+        step_text: useData[i].step_text,
         ingredients: [
           {
-            Quantity: rawData[i].quantity,
-            Ingredient: rawData[i].ingredient_name,
+            Quantity: useData[i].quantity,
+            Ingredient: useData[i].ingredient_name,
           },
         ],
       };
@@ -59,10 +63,11 @@ function buildRecipe(rawData) {
     };
     // push ingredients to each step
     if (i > 0) {
-      if (rawData[i].step_number === rawData[i - 1].step_number) {
-        recipe.steps[i - 1].ingredients.push({
-          Quantity: rawData[i].quantity,
-          Ingredient: rawData[i].ingredient_name,
+      if (useData[i].step_number === useData[i - 1].step_number) {
+        let x = recipe.steps.length;
+        recipe.steps[x - 1].ingredients.push({
+          Quantity: useData[i].quantity,
+          Ingredient: useData[i].ingredient_name,
         });
       } else {
         pushStep();
@@ -86,21 +91,23 @@ async function getRecipe(filter) {
     .orderBy("s.step_number")
     .where(filter);
 
-  return buildRecipe(rawData);
+  const processed = buildRecipe(rawData);
+  return processed;
 }
 
 async function getRecipeById(recipe_id) {
   const rawData = await db("recipes as r")
-    .join("steps as s", "s.recipe_id", "r.recipe_id")
-    .join("recipe_categories as rcat", "rcat.recipe_id", "r.recipe_id")
-    .join("categories as cat", "cat.category_id", "rcat.category_id")
+    .leftJoin("steps as s", "s.recipe_id", "r.recipe_id")
+    .leftJoin("recipe_categories as rcat", "rcat.recipe_id", "r.recipe_id")
+    .leftJoin("categories as cat", "cat.category_id", "rcat.category_id")
     .leftJoin("steps_ingredients as si", "si.step_id", "s.step_id")
     .leftJoin("ingredients as i", "si.ingredient_id", "i.ingredient_id")
     .select( "r.recipe_id", "r.title", "r.source", "r.image", "r.user_id", "cat.category_name", "s.step_number", "s.step_text", "si.quantity", "i.ingredient_name" )
     .orderBy("s.step_number")
     .where("r.recipe_id", recipe_id);
 
-  return buildRecipe(rawData);
+  const processed = buildRecipe(rawData);
+  return processed;
 }
 
 // search for recipes by Category

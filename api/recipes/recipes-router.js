@@ -13,13 +13,13 @@ router.get("/", (req, res, next) => {
     .catch(next);
 });
 
-router.post("/", validateRecipe, (req, res, next) => {
-  // const recipe = { 
-  //   title: req.body.title,
-  //   source: req.body.source,
-  //   image: req.body.image,
-  //   user_id: req.session.user.user_id 
-  // };
+router.post("/", (req, res, next) => {
+  const recipe = { 
+    title: req.body.title,
+    source: req.body.source,
+    image: req.body.image,
+    user_id: req.session.user.user_id 
+  };
   // const category = {
   //   req.body.categories
   // }

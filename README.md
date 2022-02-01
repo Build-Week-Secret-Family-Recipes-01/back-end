@@ -13,12 +13,12 @@ Endpoints:
 - [GET] "/api/users/" - returns an array with all users (user_id, username, password, permissions) - **must be a logged in admin to view
 - [GET] "/api/users/:user_id" - returns data for that user_id (user_id, username, password, permissions) - **must be a logged in admin to view
 - [GET] "/api/recipes" - returns array of ALL recipes in the db (not ingredients or steps though, just general info)
-- [GET] (ONLY WORKS FOR Spaghetti) "/api/recipes/:recipe_name" - returns the data for that recipe
+- [GET] (ONLY WORKS FOR spaghetti) "/api/recipes/:recipe_name" - returns the data for that recipe
 - [GET] "/api/recipes/category/:category_name" - returns basic recipe info for recipes in that category (Ex: vegetarian )
 
+- [GET] < need an endpoint to get all of MY posted recipes >
 - [POST] < need an endpoint to post a new recipe >
 - [PUT] < need an endpoint to update an existing recipe >
-- [GET] < need an endpoint to get all of my recipes >
 - (optional)[DELETE] < need an endpoint to delete a recipe >
 
 
