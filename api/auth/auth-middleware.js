@@ -13,10 +13,10 @@ const loggedInCheck = (req, res, next) => {
 };
 
 const permissionsCheck = (permissions) => (req, res, next) => {
-  if (req.decodedJwt.permissions === permissions) {
+  if (req.session.user.permissions === permissions) {
     next();
   } else {
-    next({ status: 403, message: "You are not authorized to view this data" });
+    next({ status: 403, message: "You are not permitted to view this data" });
   }
 };
 
@@ -44,7 +44,7 @@ const checkUsernameExists = async (req, res, next) => {
     const usernameExists = await dbConfig("users")
       .where("username", req.body.username)
       .first();
-      
+
     if (usernameExists) {
       next();
     } else {
@@ -56,25 +56,21 @@ const checkUsernameExists = async (req, res, next) => {
 };
 
 const validatePermissionsName = (req, res, next) => {
-  try {
-    if (req.body.permissions) {
-      req.body.permissions = req.body.permissions.toLowerCase().trim();
-      const permissions = req.body.permissions;
+  if (req.body.permissions) {
+    req.body.permissions = req.body.permissions.toLowerCase().trim();
+    const permissions = req.body.permissions;
 
-      if (permissions.length === 0) {
-        req.body.permissions = "user";
-        next();
-      } else if (permissions === "admin" || permissions === "user") {
-        next();
-      } else {
-        next({ status: 401, message: "Invalid permissions status" });
-      }
-    } else {
+    if (permissions.length === 0) {
       req.body.permissions = "user";
       next();
+    } else if (permissions === "admin" || permissions === "user") {
+      next();
+    } else {
+      next({ status: 401, message: "Invalid permissions status" });
     }
-  } catch (err) {
-    next(err);
+  } else {
+    req.body.permissions = "user";
+    next();
   }
 };
 

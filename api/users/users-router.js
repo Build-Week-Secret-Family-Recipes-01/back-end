@@ -1,5 +1,4 @@
 const router = require("express").Router();
-const { BCRYPT_ROUNDS } = require("../secrets");
 const bcrypt = require("bcryptjs");
 const Users = require("./users-model.js");
 const {
@@ -34,10 +33,9 @@ router.put(
   checkUsernameUnique,
   validatePermissionsName,
   (req, res, next) => {
-    let user = req.body;
-
-    const hash = bcrypt.hashSync(user.password, BCRYPT_ROUNDS);
-    user.password = hash;
+    const user = req.body;
+      const hash = bcrypt.hashSync(user.password);
+      user.password = hash;
 
     Users.updateUser(req.params.user_id, user)
       .then((user) => {
