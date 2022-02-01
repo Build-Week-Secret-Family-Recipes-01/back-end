@@ -1,8 +1,6 @@
 const router = require("express").Router();
-const { BCRYPT_ROUNDS } = require("../secrets");
 const bcrypt = require("bcryptjs");
 const User = require("../users/users-model");
-const makeToken = require("./auth-token-builder");
 const {
   checkUsernameExists,
   validatePermissionsName,
@@ -13,33 +11,47 @@ router.post(
   "/register",
   validatePermissionsName,
   checkUsernameUnique,
-  (req, res, next) => {
-    let user = req.body;
-
-    const hash = bcrypt.hashSync(user.password, BCRYPT_ROUNDS);
-    user.password = hash;
-
-    User.addUser(user)
-      .then((createdUser) => {
-        res.status(201).json(createdUser);
-      })
-      .catch(next);
+  async (req, res, next) => {
+    try {
+      const { username, password } = req.body;
+      const hash = bcrypt.hashSync(password);
+      const newUser = { username, password: hash };
+      const inserted = await User.addUser(newUser);
+      res.status(200).json(inserted);
+    } catch (err) {
+      next(err);
+    }
   }
 );
 
-router.post("/login", checkUsernameExists, (req, res, next) => {
-  let { username, password } = req.body;
+router.post("/login", checkUsernameExists, async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+    const [user] = await User.findBy({ username });
+    
+    if (user && bcrypt.compareSync(password, user.password)) {
+      req.session.user = user;
+      res.status(200).json({ message: `Welcome back, ${username}` });
+    } else {
+      next({ status: 401, message: "Invalid credentials" });
+    }
+  } catch (err) {
+    next(err);
+  }
+});
 
-  User.findBy({ username })
-    .then(([user]) => {
-      if (user && bcrypt.compareSync(password, user.password)) {
-        const token = makeToken(user);
-        res.status(200).json({ message: `Welcome back, ${username}`, token });
+router.get("/logout", (req, res, next) => {
+  if (req.session.user) {
+    req.session.destroy((err) => {
+      if (err) {
+        next(err);
       } else {
-        next({ status: 401, message: "Invalid credentials" });
+        res.json({ message: "Successfully logged out" });
       }
-    })
-    .catch(next);
+    });
+  } else {
+    res.json({ message: "Nobody was logged in" });
+  }
 });
 
 module.exports = router;
