@@ -14,16 +14,6 @@ router.get("/", (req, res, next) => {
 });
 
 router.post("/", (req, res, next) => {
-  const recipe = { 
-    title: req.body.title,
-    source: req.body.source,
-    image: req.body.image,
-    user_id: req.session.user.user_id 
-  };
-  // const category = {
-  //   req.body.categories
-  // }
-
   Recipes.addRecipe(req.body)
     .then((recipe) => {
       res.status(201).json(recipe);
@@ -31,18 +21,18 @@ router.post("/", (req, res, next) => {
     .catch(next);
 });
 
-router.get("/:recipe_title", (req, res, next) => {
-  const title = req.params.recipe_title;
-  Recipes.getRecipe({ title })
-    .then((recipes) => {
-      res.status(200).json(recipes);
-    })
-    .catch(next);
-});
+// router.get("/:recipe_title", (req, res, next) => {
+//   const title = req.params.recipe_title;
+//   Recipes.getRecipe({ title })
+//     .then((recipes) => {
+//       res.status(200).json(recipes);
+//     })
+//     .catch(next);
+// });
 
-router.get("/id/:recipe_id", (req, res, next) => {
+router.get("/:recipe_id", (req, res, next) => {
   const recipe_id = req.params.recipe_id;
-  Recipes.getRecipeById( recipe_id )
+  Recipes.getRecipeById(recipe_id)
     .then((recipes) => {
       res.status(200).json(recipes);
     })

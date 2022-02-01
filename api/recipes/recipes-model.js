@@ -6,13 +6,34 @@ async function getAllRecipes() {
 }
 
 async function addRecipe(recipe) {
-  const [id] = await db("recipes").insert(recipe, [
-    "recipe_id"
-  ]);
-  // you need a transaction > will fill in all tables - WRAP the whole thing into the transaction syntax
+  await db.transaction(async (trx) => {
+    const recipe = {
+      title: recipe.title,
+      source: recipe.source,
+      image: recipe.image
+    }
+    let [recipe_id] = await trx("recipes").insert(recipe);
 
-  console.log(id.recipe_id);
-  return getRecipeById(id.recipe_id);
+    const category_name = recipe.category_name.trim().toLowerCase();
+    let category_id;
+    const [existing_Category_id] = await trx("categories").where("category_name", category_name);
+    if (existing_Category_id) {
+      category_id = existing_Category_id;
+    } else {
+      const [id] = await trx("categories").insert(category_name);
+      category_id = id;
+    }
+
+    const recipe_category = {
+      recipe_id: recipe_id,
+      category_id: category_id
+    }
+    await trx("recipe_categories").insert(recipe_category);
+
+    
+    
+  });
+  // you need a transaction > will fill in all tables - WRAP the whole thing into the transaction syntax
 }
 
 function buildRecipe(rawData) {
@@ -44,7 +65,6 @@ function buildRecipe(rawData) {
   } else {
     useData = rawData;
   }
-  console.log(useData)
 
   // push steps to recipe
   for (let i = 0; i < useData.length; i++) {
@@ -76,23 +96,22 @@ function buildRecipe(rawData) {
       pushStep();
     }
   }
-
   return recipe;
 }
 
 async function getRecipe(filter) {
-  const rawData = await db("recipes as r")
-    .join("steps as s", "s.recipe_id", "r.recipe_id")
-    .join("recipe_categories as rcat", "rcat.recipe_id", "r.recipe_id")
-    .join("categories as cat", "cat.category_id", "rcat.category_id")
-    .leftJoin("steps_ingredients as si", "si.step_id", "s.step_id")
-    .leftJoin("ingredients as i", "si.ingredient_id", "i.ingredient_id")
-    .select( "r.recipe_id", "r.title", "r.source", "r.image", "r.user_id", "cat.category_name", "s.step_number", "s.step_text", "si.quantity", "i.ingredient_name" )
-    .orderBy("s.step_number")
-    .where(filter);
+  // const rawData = await db("recipes as r")
+  //   .join("steps as s", "s.recipe_id", "r.recipe_id")
+  //   .join("recipe_categories as rcat", "rcat.recipe_id", "r.recipe_id")
+  //   .join("categories as cat", "cat.category_id", "rcat.category_id")
+  //   .leftJoin("steps_ingredients as si", "si.step_id", "s.step_id")
+  //   .leftJoin("ingredients as i", "si.ingredient_id", "i.ingredient_id")
+  //   .select( "r.recipe_id", "r.title", "r.source", "r.image", "r.user_id", "cat.category_name", "s.step_number", "s.step_text", "si.quantity", "i.ingredient_name" )
+  //   .orderBy("s.step_number")
+  //   .where(filter);
 
-  const processed = buildRecipe(rawData);
-  return processed;
+  // const processed = buildRecipe(rawData);
+  // return processed;
 }
 
 async function getRecipeById(recipe_id) {
