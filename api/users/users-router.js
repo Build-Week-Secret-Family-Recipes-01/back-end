@@ -17,7 +17,7 @@ router.get("/", loggedInCheck, permissionsCheck("admin"), (req, res, next) => {
     .catch(next);
 });
 
-router.get("/:user_id", validateUserId, (req, res, next) => {
+router.get("/:user_id", validateUserId, permissionsCheck("admin"), (req, res, next) => {
   const user_id = req.params.user_id;
   Users.findBy({ user_id })
     .first()

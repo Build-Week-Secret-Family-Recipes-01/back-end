@@ -5,6 +5,14 @@ async function getAllRecipes() {
   return recipes;
 }
 
+async function addRecipe(recipe) {
+  const [id] = await db("recipes").insert(recipe, [
+    "recipe_id"
+  ]);
+  console.log(id.recipe_id);
+  return getRecipeById(id.recipe_id);
+}
+
 function buildRecipe(rawData) {
   let recipe = {
     recipe_id: rawData[0].recipe_id,
@@ -103,7 +111,13 @@ async function getRecipesByCategory(category_name) {
   .where("cat.category_name", category_name)
 }
 
-module.exports = { getAllRecipes, getRecipe, getRecipeById, getRecipesByCategory };
+module.exports = { 
+  getAllRecipes, 
+  getRecipe, 
+  getRecipeById, 
+  getRecipesByCategory, 
+  addRecipe 
+};
 
 
 

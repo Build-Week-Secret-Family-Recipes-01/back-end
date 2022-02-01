@@ -3,10 +3,30 @@ const router = express.Router();
 
 const Recipes = require("./recipes-model");
 
+const { validateRecipe } = require("./recipes-middleware");
+
 router.get("/", (req, res, next) => {
   Recipes.getAllRecipes()
     .then((recipes) => {
       res.status(200).json(recipes);
+    })
+    .catch(next);
+});
+
+router.post("/", validateRecipe, (req, res, next) => {
+  // const recipe = { 
+  //   title: req.body.title,
+  //   source: req.body.source,
+  //   image: req.body.image,
+  //   user_id: req.session.user.user_id 
+  // };
+  // const category = {
+  //   req.body.categories
+  // }
+
+  Recipes.addRecipe(req.body)
+    .then((recipe) => {
+      res.status(201).json(recipe);
     })
     .catch(next);
 });
