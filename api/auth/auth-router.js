@@ -13,11 +13,12 @@ router.post(
   checkUsernameUnique,
   async (req, res, next) => {
     try {
-      const user = req.body;
-      const hash = bcrypt.hashSync(user.password);
-      user.password = hash;
-      const newUser = await User.addUser(user);
-      res.status(200).json(newUser);
+      res.json('hello, morgan');
+      // const user = req.body;
+      // const hash = bcrypt.hashSync(user.password);
+      // user.password = hash;
+      // const newUser = await User.addUser(user);
+      // res.status(201).json(newUser);
     } catch (err) {
       next(err);
     }
