@@ -138,6 +138,7 @@ function buildRecipe(rawData) {
   return recipe;
 }
 
+// will probs delete later
 async function getRecipe(filter) {
   // const rawData = await db("recipes as r")
   //   .join("steps as s", "s.recipe_id", "r.recipe_id")
