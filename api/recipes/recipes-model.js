@@ -1,4 +1,3 @@
-// const res = require("express/lib/response");
 const db = require("../data/db-config");
 
 async function getAllRecipes() {
@@ -84,6 +83,7 @@ function buildRecipe(rawData) {
     image: rawData[0].image,
     categories: [],
     steps: [],
+    ingredients: []
   };
 
   //update categories for recipe
@@ -106,52 +106,32 @@ function buildRecipe(rawData) {
   }
 
   // push steps to recipe
+  let counter = [];
   for (let i = 0; i < useData.length; i++) {
-    let pushStep = () => {
-      let step = {
+    if (!counter.includes(useData[i].step_number)) {
+      recipe.steps.push({
         step_number: useData[i].step_number,
-        step_text: useData[i].step_text,
-        ingredients: [
-          {
-            Quantity: useData[i].quantity,
-            Ingredient: useData[i].ingredient_name,
-          },
-        ],
-      };
-      recipe.steps.push(step);
-    };
-    // push ingredients to each step
-    if (i > 0) {
-      if (useData[i].step_number === useData[i - 1].step_number) {
-        let x = recipe.steps.length;
-        recipe.steps[x - 1].ingredients.push({
-          Quantity: useData[i].quantity,
-          Ingredient: useData[i].ingredient_name,
-        });
-      } else {
-        pushStep();
-      }
-    } else {
-      pushStep();
+        step_text: useData[i].step_text
+      })
+      counter.push(useData[i].step_number);
     }
   }
+
+  // push ingredients to recipe
+  let ingredientsTracker = [];
+  useData.forEach(ingredient => {
+    for (let i = 0; i < recipe.steps.length + 1; i++) {
+      if (!ingredientsTracker.includes(ingredient.ingredient_name)) {
+        recipe.ingredients.push({
+          quantity: ingredient.quantity,
+          ingredient_name: ingredient.ingredient_name
+        });
+        ingredientsTracker.push(ingredient.ingredient_name);
+      }
+    }
+  });
+
   return recipe;
-}
-
-// will probs delete later
-async function getRecipe(filter) {
-  // const rawData = await db("recipes as r")
-  //   .join("steps as s", "s.recipe_id", "r.recipe_id")
-  //   .join("recipe_categories as rcat", "rcat.recipe_id", "r.recipe_id")
-  //   .join("categories as cat", "cat.category_id", "rcat.category_id")
-  //   .leftJoin("steps_ingredients as si", "si.step_id", "s.step_id")
-  //   .leftJoin("ingredients as i", "si.ingredient_id", "i.ingredient_id")
-  //   .select( "r.recipe_id", "r.title", "r.source", "r.image", "r.user_id", "cat.category_name", "s.step_number", "s.step_text", "si.quantity", "i.ingredient_name" )
-  //   .orderBy("s.step_number")
-  //   .where(filter);
-
-  // const processed = buildRecipe(rawData);
-  // return processed;
 }
 
 async function getRecipeById(recipe_id) {
@@ -159,9 +139,8 @@ async function getRecipeById(recipe_id) {
     .leftJoin("steps as s", "s.recipe_id", "r.recipe_id")
     .leftJoin("recipe_categories as rcat", "rcat.recipe_id", "r.recipe_id")
     .leftJoin("categories as cat", "cat.category_id", "rcat.category_id")
-    .leftJoin("steps_ingredients as si", "si.step_id", "s.step_id")
-    .leftJoin("ingredients as i", "si.ingredient_id", "i.ingredient_id")
-    .select( "r.recipe_id", "r.title", "r.source", "r.image", "r.user_id", "cat.category_name", "s.step_number", "s.step_text", "si.quantity", "i.ingredient_name" )
+    .leftJoin("ingredients as i", "r.recipe_id", "i.recipe_id")
+    .select( "r.recipe_id", "r.title", "r.source", "r.image", "r.user_id", "cat.category_name", "s.step_number", "s.step_text", "i.quantity", "i.ingredient_name")
     .orderBy("s.step_number")
     .where("r.recipe_id", recipe_id);
 
@@ -179,14 +158,27 @@ async function getRecipesByCategory(category_name) {
 
 module.exports = { 
   getAllRecipes,
-  getMyRecipes, 
-  getRecipe, 
+  getMyRecipes,
   getRecipeById, 
   getRecipesByCategory, 
   addRecipe 
 };
 
+// will probs delete later
+async function getRecipe(filter) {
+  // const rawData = await db("recipes as r")
+  //   .join("steps as s", "s.recipe_id", "r.recipe_id")
+  //   .join("recipe_categories as rcat", "rcat.recipe_id", "r.recipe_id")
+  //   .join("categories as cat", "cat.category_id", "rcat.category_id")
+  //   .leftJoin("steps_ingredients as si", "si.step_id", "s.step_id")
+  //   .leftJoin("ingredients as i", "si.ingredient_id", "i.ingredient_id")
+  //   .select( "r.recipe_id", "r.title", "r.source", "r.image", "r.user_id", "cat.category_name", "s.step_number", "s.step_text", "si.quantity", "i.ingredient_name" )
+  //   .orderBy("s.step_number")
+  //   .where(filter);
 
+  // const processed = buildRecipe(rawData);
+  // return processed;
+}
 
 // will probs delete
 async function getIngredients(step_id) {

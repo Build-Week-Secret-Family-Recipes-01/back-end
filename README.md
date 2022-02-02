@@ -5,7 +5,7 @@ Test Accounts:
 - username: user2 | pw: test
 
 Endpoints:
-- [BackEnd Base URL] http://secret-family-recipes-01.herokuapp.com/
+- [BackEnd Base URL] https://secret-family-recipes-01.herokuapp.com/
 - [POST] "/api/auth/register" - returns user data for new account (user_id, username, password, permissions)
 - [POST] "/api/auth/login" - returns user data for logged in account (user_id, username, password, permissions)
 - [GET] "/api/auth/logout" - logs out the user

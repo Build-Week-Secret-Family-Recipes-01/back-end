@@ -47,6 +47,15 @@ exports.up = async (knex) => {
     .createTable("ingredients", (table) => {
       table.increments("ingredient_id");
       table.text("ingredient_name").notNullable().unique();
+      table.text("quantity");
+      table
+        .integer("recipe_id")
+        .unsigned()
+        .notNullable()
+        .references("recipe_id")
+        .inTable("recipes")
+        .onDelete("RESTRICT")
+        .onUpdate("RESTRICT");
     })
     .createTable("steps", (table) => {
       table.increments("step_id");
@@ -61,26 +70,26 @@ exports.up = async (knex) => {
         .onDelete("RESTRICT")
         .onUpdate("RESTRICT");
     })
-    .createTable("steps_ingredients", (table) => {
-      table.increments("step_ingredient_id");
-      table
-        .integer("step_id")
-        .unsigned()
-        .notNullable()
-        .references("step_id")
-        .inTable("steps")
-        .onDelete("RESTRICT")
-        .onUpdate("RESTRICT");
-      table
-        .integer("ingredient_id")
-        .unsigned()
-        .notNullable()
-        .references("ingredient_id")
-        .inTable("ingredients")
-        .onDelete("RESTRICT")
-        .onUpdate("RESTRICT");
-      table.text("quantity");
-    });
+    // .createTable("steps_ingredients", (table) => {
+    //   table.increments("step_ingredient_id");
+    //   table
+    //     .integer("step_id")
+    //     .unsigned()
+    //     .notNullable()
+    //     .references("step_id")
+    //     .inTable("steps")
+    //     .onDelete("RESTRICT")
+    //     .onUpdate("RESTRICT");
+    //   table
+    //     .integer("ingredient_id")
+    //     .unsigned()
+    //     .notNullable()
+    //     .references("ingredient_id")
+    //     .inTable("ingredients")
+    //     .onDelete("RESTRICT")
+    //     .onUpdate("RESTRICT");
+    //   table.text("quantity");
+    // });
 };
 
 exports.down = async (knex) => {
