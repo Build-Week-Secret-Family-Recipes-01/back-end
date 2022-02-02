@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const Users = require("./users-model.js");
+const Recipes = require("../recipes/recipes-model.js");
 const {
   loggedInCheck,
   permissionsCheck,
@@ -23,6 +24,14 @@ router.get("/:user_id", validateUserId, permissionsCheck("admin"), (req, res, ne
     .first()
     .then((user) => {
       res.json(user);
+    })
+    .catch(next);
+});
+
+router.get("/:user_id/recipes", loggedInCheck, (req, res, next) => {
+  Recipes.getMyRecipes(req.params.user_id)
+    .then((recipes) => {
+      res.status(200).json(recipes);
     })
     .catch(next);
 });

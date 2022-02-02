@@ -6,6 +6,12 @@ async function getAllRecipes() {
   return recipes;
 }
 
+async function getMyRecipes(user_id) {
+  const recipes = await db("recipes").where("user_id", user_id);
+  return recipes;
+}
+
+// IN PROGRESS!!!!!!!
 async function addRecipe(recipe) {
   let newRecipe_id;
   await db.transaction(async (trx) => {
@@ -171,7 +177,8 @@ async function getRecipesByCategory(category_name) {
 }
 
 module.exports = { 
-  getAllRecipes, 
+  getAllRecipes,
+  getMyRecipes, 
   getRecipe, 
   getRecipeById, 
   getRecipesByCategory, 
