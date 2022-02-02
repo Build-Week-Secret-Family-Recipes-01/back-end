@@ -16,8 +16,8 @@ Endpoints:
 - [GET] "/api/users/:user_id/recipes" - returns array of YOUR recipes in the db (not ingredients or steps though, just general info)
 - [GET] "/api/recipes/:recipe_id" - returns the data for that recipe
 - [GET] "/api/recipes/category/:category_name" - returns basic recipe info for recipes in that category (Ex: vegetarian )
+- [POST] "/api/recipes" - returns your newly created recipe
 
-- [POST] < need an endpoint to post a new recipe >
 - [PUT] < need an endpoint to update an existing recipe >
 - (optional)[DELETE] < need an endpoint to delete a recipe >
 
