@@ -46,7 +46,7 @@ exports.up = async (knex) => {
     })
     .createTable("ingredients", (table) => {
       table.increments("ingredient_id");
-      table.text("ingredient_name").notNullable().unique();
+      table.text("ingredient_name").notNullable();
       table.text("quantity");
       table
         .integer("recipe_id")
