@@ -4,6 +4,7 @@ const router = express.Router();
 const Recipes = require("./recipes-model");
 
 const { validateRecipe } = require("./recipes-middleware");
+const { loggedInCheck } = require("../auth/auth-middleware")
 
 router.get("/", (req, res, next) => {
   Recipes.getAllRecipes()
@@ -13,7 +14,7 @@ router.get("/", (req, res, next) => {
     .catch(next);
 });
 
-router.post("/", (req, res, next) => {
+router.post("/", loggedInCheck, validateRecipe, (req, res, next) => {
   Recipes.addRecipe(req.body)
     .then((recipe) => {
       res.status(201).json(recipe);

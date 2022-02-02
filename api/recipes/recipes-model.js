@@ -1,3 +1,4 @@
+// const res = require("express/lib/response");
 const db = require("../data/db-config");
 
 async function getAllRecipes() {
@@ -6,34 +7,66 @@ async function getAllRecipes() {
 }
 
 async function addRecipe(recipe) {
+  let newRecipe_id;
   await db.transaction(async (trx) => {
-    const recipe = {
+    const addRecipe = {
       title: recipe.title,
       source: recipe.source,
-      image: recipe.image
+      image: recipe.image,
+      user_id: recipe.user_id
     }
-    let [recipe_id] = await trx("recipes").insert(recipe);
+    let recipe_id = await trx("recipes").insert(addRecipe);
+    newRecipe_id = recipe_id;
 
-    const category_name = recipe.category_name.trim().toLowerCase();
-    let category_id;
-    const [existing_Category_id] = await trx("categories").where("category_name", category_name);
-    if (existing_Category_id) {
-      category_id = existing_Category_id;
-    } else {
-      const [id] = await trx("categories").insert(category_name);
-      category_id = id;
-    }
+    recipe.categories.forEach(async category => {
+      const category_name = category.trim().toLowerCase();
 
-    const recipe_category = {
-      recipe_id: recipe_id,
-      category_id: category_id
-    }
-    await trx("recipe_categories").insert(recipe_category);
+      let category_id;
+      const [existing_Category_id] = await trx("categories").where("category_name", category_name);
+      console.log("Cat id: ", existing_Category_id);
 
-    
-    
+      if (existing_Category_id) {
+        category_id = existing_Category_id;
+      } else {
+        const [id] = await trx("categories").insert(category_name);
+        category_id = id;
+      }
+
+      const recipe_category = {
+        recipe_id: recipe_id,
+        category_id: category_id
+      }
+      await trx("recipe_categories").insert(recipe_category);
+    })
+
+    const steps = recipe.steps;
+    steps.forEach(async step => {
+      let addStep = {
+        step_text: step.step_text,
+        step_number: step.step_number,
+        recipe_id: recipe_id
+      }
+      let [step_id] = await trx("steps").insert(addStep);
+      
+      let ingredients = step.ingredients;
+      ingredients.forEach(async ingredient => {
+        let addIngredient = {
+          ingredient_name: ingredient.ingredient_name
+        }
+        let [ingredient_id] = await trx("ingredients").insert(addIngredient);
+
+        let addStepIngredient = {
+          step_id: step_id,
+          ingredient_id: ingredient_id,
+          quantity: ingredient.quantity
+        }
+        await trx("steps_ingredients").insert(addStepIngredient);
+        [newRecipe_id] = recipe_id;
+      })
+    })
   });
-  // you need a transaction > will fill in all tables - WRAP the whole thing into the transaction syntax
+  console.log("NEW recipe_id: ", newRecipe_id);
+  return getRecipeById(newRecipe_id);
 }
 
 function buildRecipe(rawData) {
