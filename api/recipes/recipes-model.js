@@ -13,7 +13,7 @@ async function getMyRecipes(user_id) {
 
 async function addRecipe(recipe) {
   let newRecipe_id;
-  await db.transaction(async (trx) => {
+  await db.transaction(async () => {
     const addRecipe = {
       title: recipe.title,
       source: recipe.source,
@@ -169,11 +169,11 @@ async function getRecipeById(recipe_id) {
 }
 
 // search for recipes by Category
-async function getRecipesByCategory(category_name) {
+async function getRecipesByCategory(category_id) {
   return await db("recipes as r")
     .join("recipe_categories as rcat", "rcat.recipe_id", "r.recipe_id")
     .join("categories as cat", "cat.category_id", "rcat.category_id")
-    .where("cat.category_name", category_name);
+    .where("cat.category_id", category_id);
 }
 
 module.exports = {

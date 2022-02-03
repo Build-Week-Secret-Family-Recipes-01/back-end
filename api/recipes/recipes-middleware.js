@@ -1,4 +1,4 @@
-const dbConfig = require("../data/db-config");
+// const dbConfig = require("../data/db-config");
 
 const validateRecipe = async (req, res, next) => {
     const recipe = req.body;

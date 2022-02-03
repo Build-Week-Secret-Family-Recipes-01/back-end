@@ -31,9 +31,9 @@ router.get("/:recipe_id", (req, res, next) => {
     .catch(next);
 });
 
-router.get("/category/:category_name", (req, res, next) => {
-  const category_name = req.params.category_name;
-  Recipes.getRecipesByCategory(category_name)
+router.get("/category/:category_id", (req, res, next) => {
+  const category_id = req.params.category_id;
+  Recipes.getRecipesByCategory(category_id)
     .then((recipes) => {
       if (recipes.length === 0) {
         res
