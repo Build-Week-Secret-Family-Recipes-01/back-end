@@ -18,8 +18,8 @@ exports.up = async (knex) => {
         .notNullable()
         .references("user_id")
         .inTable("users")
-        .onDelete("RESTRICT")
-        .onUpdate("RESTRICT");
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
     })
     .createTable("categories", (table) => {
       table.increments("category_id");
@@ -33,16 +33,16 @@ exports.up = async (knex) => {
         .notNullable()
         .references("recipe_id")
         .inTable("recipes")
-        .onDelete("RESTRICT")
-        .onUpdate("RESTRICT");
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
       table
         .integer("category_id")
         .unsigned()
         .notNullable()
         .references("category_id")
         .inTable("categories")
-        .onDelete("RESTRICT")
-        .onUpdate("RESTRICT");
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
     })
     .createTable("ingredients", (table) => {
       table.increments("ingredient_id");
@@ -54,8 +54,8 @@ exports.up = async (knex) => {
         .notNullable()
         .references("recipe_id")
         .inTable("recipes")
-        .onDelete("RESTRICT")
-        .onUpdate("RESTRICT");
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
     })
     .createTable("steps", (table) => {
       table.increments("step_id");
@@ -67,29 +67,9 @@ exports.up = async (knex) => {
         .notNullable()
         .references("recipe_id")
         .inTable("recipes")
-        .onDelete("RESTRICT")
-        .onUpdate("RESTRICT");
-    })
-    // .createTable("steps_ingredients", (table) => {
-    //   table.increments("step_ingredient_id");
-    //   table
-    //     .integer("step_id")
-    //     .unsigned()
-    //     .notNullable()
-    //     .references("step_id")
-    //     .inTable("steps")
-    //     .onDelete("RESTRICT")
-    //     .onUpdate("RESTRICT");
-    //   table
-    //     .integer("ingredient_id")
-    //     .unsigned()
-    //     .notNullable()
-    //     .references("ingredient_id")
-    //     .inTable("ingredients")
-    //     .onDelete("RESTRICT")
-    //     .onUpdate("RESTRICT");
-    //   table.text("quantity");
-    // });
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
+    });
 };
 
 exports.down = async (knex) => {

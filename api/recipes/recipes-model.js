@@ -1,4 +1,5 @@
 const res = require("express/lib/response");
+const { use } = require("express/lib/router");
 const db = require("../data/db-config");
 
 async function getAllRecipes() {
@@ -11,6 +12,7 @@ async function getMyRecipes(user_id) {
   return recipes;
 }
 
+// function to insert recipe data into db tables
 async function addRecipe(recipe) {
   let newRecipe_id;
   await db.transaction(async () => {
@@ -31,7 +33,10 @@ async function addRecipe(recipe) {
     recipe.categories.forEach(async (category) => {
       let category_id;
       try {
-        const [find_category_id] = await db("categories").where( "category_name", category );
+        const [find_category_id] = await db("categories").where(
+          "category_name",
+          category
+        );
         category_id = find_category_id.category_id;
 
         const recipe_category = {
@@ -83,6 +88,107 @@ async function addRecipe(recipe) {
   return getRecipeById(newRecipe_id);
 }
 
+// function to update recipe data in db
+async function updateRecipe(recipe) {
+  let use_recipe_id = recipe.recipe_id;
+  await db.transaction(async () => {
+    const updateRecipe = {
+      title: recipe.title,
+      source: recipe.source,
+      image: recipe.image,
+      user_id: recipe.user_id,
+    };
+
+    try {
+      await db("recipes")
+        .where("recipe_id", use_recipe_id)
+        .update(updateRecipe, "recipe_id");
+
+    } catch (err) {
+      res.status(400).json(err);
+    }
+
+    try {
+      return db("recipe_categories")
+        .where("recipe_id", use_recipe_id)
+        .del();
+    } catch (err) {
+      res.status(400).json(err);
+    }
+    recipe.categories.forEach(async (category) => {
+      let category_id;
+      try {
+        const [find_category_id] = await db("categories").where( "category_name", category );
+        category_id = find_category_id.category_id;
+
+        const recipe_category = {
+          recipe_id: use_recipe_id,
+          category_id: category_id,
+        };
+
+        try {
+          await db("recipe_categories").insert(recipe_category);
+        } catch (err) {
+          res.status(400).json(err);
+        }
+      } catch (err) {
+        res.status(400).json(err);
+      }
+    });
+    
+    try {
+      return db("steps")
+        .where("recipe_id", use_recipe_id)
+        .del();
+    } catch (err) {
+      res.status(400).json(err);
+    }
+    let stepsToAdd = [];
+    recipe.steps.forEach((step) => {
+      let newStep = {
+        step_text: step.step_text,
+        step_number: step.step_number,
+        recipe_id: use_recipe_id,
+      };
+      stepsToAdd.push(newStep);
+    });
+    try {
+      await db("steps").insert(stepsToAdd);
+    } catch (err) {
+      res.status(400).json(err);
+    }
+
+    try {
+      return db("ingredients")
+        .where("recipe_id", use_recipe_id)
+        .del();
+    } catch (err) {
+      res.status(400).json(err);
+    }
+    let ingredientsToAdd = [];
+    recipe.ingredients.forEach((ingredient) => {
+      let newIngredient = {
+        ingredient_name: ingredient.ingredient_name,
+        quantity: ingredient.quantity,
+        recipe_id: use_recipe_id,
+      };
+      ingredientsToAdd.push(newIngredient);
+    });
+    try {
+      await db("ingredients").insert(ingredientsToAdd);
+    } catch (err) {
+      res.status(400).json(err);
+    }
+  });
+
+  return getRecipeById(use_recipe_id);
+}
+
+function deleteRecipe(recipe_id) {
+  return db('recipes').where({ recipe_id }).del();
+}
+
+// function to compile complete recipe object from db data
 function buildRecipe(rawData) {
   let recipe = {
     recipe_id: rawData[0].recipe_id,
@@ -143,6 +249,7 @@ function buildRecipe(rawData) {
   return recipe;
 }
 
+// search for recipe by ID
 async function getRecipeById(recipe_id) {
   const rawData = await db("recipes as r")
     .leftJoin("steps as s", "s.recipe_id", "r.recipe_id")
@@ -179,9 +286,11 @@ async function getRecipesByCategory(category_id) {
 module.exports = {
   getAllRecipes,
   getMyRecipes,
+  addRecipe,
+  updateRecipe,
   getRecipeById,
   getRecipesByCategory,
-  addRecipe,
+  deleteRecipe
 };
 
 // SQL for the GetRecipe function:

@@ -25,8 +25,18 @@ router.post("/", loggedInCheck, validateRecipe, (req, res, next) => {
 router.get("/:recipe_id", (req, res, next) => {
   const recipe_id = req.params.recipe_id;
   Recipes.getRecipeById(recipe_id)
-    .then((recipes) => {
-      res.status(200).json(recipes);
+    .then((recipe) => {
+      res.status(200).json(recipe);
+    })
+    .catch(next);
+});
+
+router.put("/:recipe_id", (req, res, next) => {
+  const updates = req.body;
+  updates.recipe_id = req.params.recipe_id;
+  Recipes.updateRecipe(updates)
+    .then((recipe) => {
+      res.status(200).json(recipe);
     })
     .catch(next);
 });
@@ -45,5 +55,17 @@ router.get("/category/:category_id", (req, res, next) => {
     })
     .catch(next);
 });
+
+router.delete('/:recipe_id', (req, res, next) => {
+  Recipes.deleteRecipe(req.params.recipe_id)
+    .then(count => {
+      if (count > 0) {
+        res.status(204).end();
+      } else {
+        res.status(404).json({ message: 'Record not found' });
+      }
+    })
+    .catch(next);
+})
 
 module.exports = router;

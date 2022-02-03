@@ -17,9 +17,8 @@ Endpoints:
 - [GET] "/api/recipes/:recipe_id" - returns the data for that recipe
 - [GET] "/api/recipes/category/:category_id" - returns basic recipe info for recipes in that category (Ex: 1 is the Breakfast category )
 - [POST] "/api/recipes" - returns your newly created recipe
-
-- [PUT] < need an endpoint to update an existing recipe >
-- (optional)[DELETE] < need an endpoint to delete a recipe >
+- [DELETE] "/api/recipes/:recipe_id" - deletes this recipe, returns nothing
+- [PUT] "/api/recipes/:recipe_id" - UPDATES the recipe - returns the updated recipe (not updating steps or ingredients, needs troubleshoot) ***Please send the entire recipe object, with all steps and ingredients
 
 
 ----------------------------------- BuildWeek Help Info -----------------------------------
