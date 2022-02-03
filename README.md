@@ -8,7 +8,6 @@ Endpoints:
 - [BackEnd Base URL] https://secret-family-recipes-01.herokuapp.com/
 - [POST] "/api/auth/register" - creates user, returns user data for new account (user_id, username, password, permissions)
 - [POST] "/api/auth/login" - logs in user, returns user data for logged in account (user_id, username, password, permissions)
-- [GET] "/api/auth/logout" - logs out the user
 - [PUT] "/api/users/:user_id" - updates user, returns updated user data for that user_id - **must send in username, permissions, password
 - [GET] "/api/users/" - returns an array with all users (user_id, username, password, permissions) - **must be a logged in admin to view
 - [GET] "/api/users/:user_id" - returns data for that user_id (user_id, username, password, permissions) - **must be a logged in admin to view

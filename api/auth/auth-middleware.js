@@ -3,6 +3,7 @@ const { JWT_SECRET } = require("../secrets");
 const jwt = require("jsonwebtoken");
 
 const loggedInCheck = (req, res, next) => {
+  console.log("CHECKING: ", req.headers);
   const token = req.headers.authorization;
   if (!token) {
     next({ status: 401, message: "Token required" });

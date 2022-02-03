@@ -10,7 +10,7 @@ const {
   privateRecipeCheck 
 } = require("../auth/auth-middleware");
 
-router.get("/", loggedInCheck, permissionsCheck("admin"), (req, res, next) => {
+router.get("/", permissionsCheck("admin"), (req, res, next) => {
   Recipes.getAllRecipes()
     .then((recipes) => {
       res.status(200).json(recipes);
@@ -18,7 +18,7 @@ router.get("/", loggedInCheck, permissionsCheck("admin"), (req, res, next) => {
     .catch(next);
 });
 
-router.post("/", loggedInCheck, validateRecipe, (req, res, next) => {
+router.post("/", validateRecipe, (req, res, next) => {
   Recipes.addRecipe(req.body)
     .then((recipe) => {
       res.status(201).json(recipe);
