@@ -91,7 +91,7 @@ async function addRecipe(recipe) {
 // function to update recipe data in db
 async function updateRecipe(recipe) {
   let use_recipe_id = recipe.recipe_id;
-  await db.transaction(async () => {
+  await db.transaction(async (db) => {
     const updateRecipe = {
       title: recipe.title,
       source: recipe.source,
@@ -110,7 +110,7 @@ async function updateRecipe(recipe) {
     }
 
     try {
-      return db("recipe_categories")
+      await db("recipe_categories")
         .where("recipe_id", use_recipe_id)
         .del();
     } catch (err) {
@@ -138,7 +138,7 @@ async function updateRecipe(recipe) {
     });
     
     try {
-      return db("steps")
+      await db("steps")
         .where("recipe_id", use_recipe_id)
         .del();
     } catch (err) {
@@ -160,7 +160,7 @@ async function updateRecipe(recipe) {
     }
 
     try {
-      return db("ingredients")
+      await db("ingredients")
         .where("recipe_id", use_recipe_id)
         .del();
     } catch (err) {
