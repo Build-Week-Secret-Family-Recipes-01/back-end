@@ -1,5 +1,4 @@
 const res = require("express/lib/response");
-const { use } = require("express/lib/router");
 const db = require("../data/db-config");
 
 async function getAllRecipes() {

@@ -8,6 +8,7 @@ const {
   validatePermissionsName,
   checkUsernameUnique,
   validateUserId,
+  privateRecipeCheck
 } = require("../auth/auth-middleware.js");
 
 router.get("/", loggedInCheck, permissionsCheck("admin"), (req, res, next) => {

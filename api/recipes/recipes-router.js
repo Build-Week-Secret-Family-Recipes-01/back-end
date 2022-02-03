@@ -4,9 +4,9 @@ const router = express.Router();
 const Recipes = require("./recipes-model");
 
 const { validateRecipe } = require("./recipes-middleware");
-const { loggedInCheck, permissionsCheck } = require("../auth/auth-middleware");
+const { loggedInCheck, permissionsCheck, privateRecipeCheck } = require("../auth/auth-middleware");
 
-router.get("/", permissionsCheck("admin"), (req, res, next) => {
+router.get("/", loggedInCheck, permissionsCheck("admin"), (req, res, next) => {
   Recipes.getAllRecipes()
     .then((recipes) => {
       res.status(200).json(recipes);
