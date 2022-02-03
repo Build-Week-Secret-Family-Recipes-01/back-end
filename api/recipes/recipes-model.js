@@ -11,7 +11,6 @@ async function getMyRecipes(user_id) {
   return recipes;
 }
 
-// IN PROGRESS!!!!!!!
 async function addRecipe(recipe) {
   let newRecipe_id;
   await db.transaction(async (trx) => {
@@ -23,31 +22,17 @@ async function addRecipe(recipe) {
     };
     let recipe_id;
     try {
-      [{ recipe_id }] = await trx("recipes").insert(addRecipe, "recipe_id");
+      [{ recipe_id }] = await db("recipes").insert(addRecipe, "recipe_id");
       newRecipe_id = recipe_id;
     } catch (err) {
-      res.status(500).json(err);
+      res.status(400).json(err);
     }
 
     recipe.categories.forEach(async (category) => {
-      const category_name = category.trim().toLowerCase();
-
       let category_id;
       try {
-        const [existing_Category_id] = await trx("categories").where("category_name", category_name);
-
-        if (existing_Category_id) {
-          category_id = existing_Category_id.category_id;
-
-        } else {
-          try {
-            let [{ id }] = await trx("categories").insert(category_name, "category_id");
-            category_id = id;
-
-          } catch (err) {
-            res.status(401).json(err);
-          }
-        }
+        const [find_category_id] = await db("categories").where( "category_name", category );
+        category_id = find_category_id.category_id;
 
         const recipe_category = {
           recipe_id: newRecipe_id,
@@ -55,13 +40,12 @@ async function addRecipe(recipe) {
         };
 
         try {
-          await trx("recipe_categories").insert(recipe_category);
-
+          await db("recipe_categories").insert(recipe_category);
         } catch (err) {
-          res.status(401).json(err);
+          res.status(400).json(err);
         }
       } catch (err) {
-        res.status(401).json(err);
+        res.status(400).json(err);
       }
     });
 
@@ -75,9 +59,9 @@ async function addRecipe(recipe) {
       stepsToAdd.push(newStep);
     });
     try {
-      await trx("steps").insert(stepsToAdd);
+      await db("steps").insert(stepsToAdd);
     } catch (err) {
-      res.status(401).json(err);
+      res.status(400).json(err);
     }
 
     let ingredientsToAdd = [];
@@ -90,9 +74,9 @@ async function addRecipe(recipe) {
       ingredientsToAdd.push(newIngredient);
     });
     try {
-      await trx("ingredients").insert(ingredientsToAdd);
+      await db("ingredients").insert(ingredientsToAdd);
     } catch (err) {
-      res.status(401).json(err);
+      res.status(400).json(err);
     }
   });
 
@@ -199,38 +183,6 @@ module.exports = {
   getRecipesByCategory,
   addRecipe,
 };
-
-// will probs delete later
-async function getRecipe(filter) {
-  // const rawData = await db("recipes as r")
-  //   .join("steps as s", "s.recipe_id", "r.recipe_id")
-  //   .join("recipe_categories as rcat", "rcat.recipe_id", "r.recipe_id")
-  //   .join("categories as cat", "cat.category_id", "rcat.category_id")
-  //   .leftJoin("steps_ingredients as si", "si.step_id", "s.step_id")
-  //   .leftJoin("ingredients as i", "si.ingredient_id", "i.ingredient_id")
-  //   .select( "r.recipe_id", "r.title", "r.source", "r.image", "r.user_id", "cat.category_name", "s.step_number", "s.step_text", "si.quantity", "i.ingredient_name" )
-  //   .orderBy("s.step_number")
-  //   .where(filter);
-  // const processed = buildRecipe(rawData);
-  // return processed;
-}
-
-// will probs delete
-async function getIngredients(step_id) {
-  const ingredients = await db("ingredients as i")
-    .join("steps_ingredients as si", "i.ingredient_id", "si.ingredient_id")
-    .select("i.ingredient_id", "i.ingredient_name", "si.quantity")
-    .where("si.step_id", step_id);
-  return ingredients;
-}
-
-// will probs delete
-async function getSteps(recipe_id) {
-  const steps = await db("steps")
-    .where("recipe_id", recipe_id)
-    .orderBy("step_number");
-  return steps;
-}
 
 // SQL for the GetRecipe function:
 // select
