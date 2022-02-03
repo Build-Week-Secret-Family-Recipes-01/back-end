@@ -31,7 +31,7 @@ async function updateUser(user_id, updates) {
 }
 
 async function deleteUser(user_id) {
-  return db('users').where({ user_id }).del();
+  return db("users").where({ user_id }).del();
 }
 
 module.exports = {
@@ -39,5 +39,5 @@ module.exports = {
   findBy,
   addUser,
   updateUser,
-  deleteUser
+  deleteUser,
 };

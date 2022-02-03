@@ -2,7 +2,7 @@ const dbConfig = require("../data/db-config");
 const { JWT_SECRET } = require("../secrets");
 const jwt = require("jsonwebtoken");
 
-const restricted = (req, res, next) => {
+const loggedInCheck = (req, res, next) => {
   const token = req.headers.authorization;
   if (!token) {
     next({ status: 401, message: "Token required" });
@@ -18,40 +18,12 @@ const restricted = (req, res, next) => {
   }
 };
 
-// const loggedInCheck = (req, res, next) => {
-//   next();
-//   // console.log("CHECKING: ", req.headers);
-//   // const token = req.headers.authorization;
-//   // if (!token) {
-//   //   next({ status: 401, message: "Token required" });
-//   // } else {
-//   //   jwt.verify(token, JWT_SECRET, (err, decoded) => {
-//   //     if (err) {
-//   //       next({ status: 401, message: "Token invalid" });
-//   //     } else {
-//   //       req.decodedJwt = decoded;
-//   //       next();
-//   //     }
-//   //   });
-//   // }
-  
-//   // // try {
-//   // //   if (req.session.user) {
-//   // //     next();
-//   // //   } else {
-//   // //     next({ status: 401, message: "You must be logged in to use this feature." });
-//   // //   }
-//   // // } catch (err) {
-//   // //   next(err);
-//   // // }
-// };
-
 const permissionsCheck = (permissions) => (req, res, next) => {
-  // if (req.session.user.permissions === permissions) {
+  if (req.decodedJwt.permissions === permissions) {
     next();
-  // } else {
-  //   next({ status: 403, message: "You are not permitted to view this data" });
-  // }
+  } else {
+    next({ status: 403, message: "Invalid permissions" });
+  }
 };
 
 const checkUsernameUnique = async (req, res, next) => {
@@ -139,7 +111,7 @@ const privateRecipeCheck = async (req, res, next) => {
 }
 
 module.exports = {
-  // loggedInCheck,
+  loggedInCheck,
   permissionsCheck,
   checkUsernameUnique,
   checkUsernameExists,
