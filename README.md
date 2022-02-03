@@ -19,6 +19,7 @@ Endpoints:
 - [POST] "/api/recipes" - creates recipe, returns your newly created recipe
 - [DELETE] "/api/recipes/:recipe_id" - deletes this recipe, returns nothing
 - [PUT] "/api/recipes/:recipe_id" - UPDATES the recipe - returns the updated recipe (not updating steps or ingredients, needs troubleshoot) ***Please send the entire recipe object, with all steps and ingredients
+- [DELETE] "/api/user/:user_id" - deletes this user and all of their recipes, returns nothing
 
 Postman JSON link to test endpoints:
 https://www.getpostman.com/collections/6544911aee1368014d50

@@ -55,4 +55,16 @@ router.put(
   }
 );
 
+router.delete("/:user_id", (req, res, next) => {
+  Users.deleteUser(req.params.user_id)
+    .then(count => {
+      if (count > 0) {
+        res.status(204).end();
+      } else {
+        res.status(404).json({ message: 'User not found' });
+      }
+    })
+    .catch(next);
+});
+
 module.exports = router;

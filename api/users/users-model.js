@@ -30,9 +30,14 @@ async function updateUser(user_id, updates) {
   return updatedUser;
 }
 
+async function deleteUser(user_id) {
+  return db('users').where({ user_id }).del();
+}
+
 module.exports = {
   findAllUsers,
   findBy,
   addUser,
   updateUser,
+  deleteUser
 };
