@@ -5,7 +5,7 @@ const Recipes = require("./recipes-model");
 
 const { validateRecipe } = require("./recipes-middleware");
 const { 
-  loggedInCheck, 
+  // loggedInCheck, 
   permissionsCheck, 
   privateRecipeCheck 
 } = require("../auth/auth-middleware");

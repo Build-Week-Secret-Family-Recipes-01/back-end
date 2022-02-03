@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const Users = require("./users-model.js");
 const Recipes = require("../recipes/recipes-model.js");
 const {
-  loggedInCheck,
+  // loggedInCheck,
   permissionsCheck,
   validatePermissionsName,
   checkUsernameUnique,
@@ -11,7 +11,7 @@ const {
   privateRecipeCheck
 } = require("../auth/auth-middleware.js");
 
-router.get("/", loggedInCheck, permissionsCheck("admin"), (req, res, next) => {
+router.get("/", permissionsCheck("admin"), (req, res, next) => {
   Users.findAllUsers()
     .then((users) => {
       res.status(200).json(users);
@@ -29,7 +29,7 @@ router.get("/:user_id", validateUserId, permissionsCheck("admin"), (req, res, ne
     .catch(next);
 });
 
-router.get("/:user_id/recipes", loggedInCheck, (req, res, next) => {
+router.get("/:user_id/recipes", (req, res, next) => {
   Recipes.getMyRecipes(req.params.user_id)
     .then((recipes) => {
       res.status(200).json(recipes);
