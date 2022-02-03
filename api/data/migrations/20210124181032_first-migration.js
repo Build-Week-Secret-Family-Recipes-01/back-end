@@ -11,6 +11,7 @@ exports.up = async (knex) => {
       table.increments("recipe_id");
       table.text("title").notNullable();
       table.text("source");
+      table.text("description");
       table.text("image");
       table
         .integer("user_id")

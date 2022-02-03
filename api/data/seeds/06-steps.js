@@ -61,5 +61,40 @@ exports.seed = async function (knex) {
       step_number: 3,
       step_text: "garnish with cherries",
     },
+    {
+      recipe_id: 5,
+      step_number: 1,
+      step_text: "Spread beans over warmed tortilla",
+    },
+    {
+      recipe_id: 5,
+      step_number: 2,
+      step_text: "Sprinkle cheese over beans and roll tortilla over on itself to create a burrito",
+    },
+    {
+      recipe_id: 5,
+      step_number: 3,
+      step_text: "Heat the burrito on the stove or microwave until cheese is melted",
+    },
+    {
+      recipe_id: 5,
+      step_number: 4,
+      step_text: "Serve with salsa",
+    },
+    {
+      recipe_id: 4,
+      step_number: 1,
+      step_text: "Take one graham cracker, put chocolate on top of it, and set it near fire so that chocolate will warm and melt slightly",
+    },
+    {
+      recipe_id: 4,
+      step_number: 2,
+      step_text: "Roast marshmallow over open fire until desired doneness",
+    },
+    {
+      recipe_id: 4,
+      step_number: 3,
+      step_text: "place marshmallow on top of chocolate covered graham cracker, then take another cracker and press on top of the mallow to create the s'more",
+    },
   ]);
 };

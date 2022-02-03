@@ -65,5 +65,40 @@ exports.seed = async function (knex) {
       quantity: null,
       recipe_id: 3
     },
+    {
+      ingredient_name: "chocolate",
+      quantity: "2 bars",
+      recipe_id: 4
+    },
+    {
+      ingredient_name: "marshmallow",
+      quantity: "8 mallows (or more, I'm not judging)",
+      recipe_id: 4
+    },
+    {
+      ingredient_name: "graham crackers",
+      quantity: "4",
+      recipe_id: 4
+    },
+    {
+      ingredient_name: "flour tortilla",
+      quantity: "1",
+      recipe_id: 5
+    },
+    {
+      ingredient_name: "refried beans",
+      quantity: "2 tbsp",
+      recipe_id: 5
+    },
+    {
+      ingredient_name: "shredded cheese",
+      quantity: "to taste",
+      recipe_id: 5
+    },
+    {
+      ingredient_name: "salsa",
+      quantity: null,
+      recipe_id: 5
+    },
   ]);
 };

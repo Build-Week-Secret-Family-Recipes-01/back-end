@@ -15,16 +15,17 @@ async function getMyRecipes(user_id) {
 // function to insert recipe data into db tables
 async function addRecipe(recipe) {
   let newRecipe_id;
-  await db.transaction(async () => {
+  await db.transaction(async (trx) => {
     const addRecipe = {
       title: recipe.title,
       source: recipe.source,
       image: recipe.image,
       user_id: recipe.user_id,
+      description: recipe.description
     };
     let recipe_id;
     try {
-      [{ recipe_id }] = await db("recipes").insert(addRecipe, "recipe_id");
+      [{ recipe_id }] = await trx("recipes").insert(addRecipe, "recipe_id");
       newRecipe_id = recipe_id;
     } catch (err) {
       res.status(400).json(err);
@@ -33,7 +34,7 @@ async function addRecipe(recipe) {
     recipe.categories.forEach(async (category) => {
       let category_id;
       try {
-        const [find_category_id] = await db("categories").where(
+        const [find_category_id] = await trx("categories").where(
           "category_name",
           category
         );
@@ -45,7 +46,7 @@ async function addRecipe(recipe) {
         };
 
         try {
-          await db("recipe_categories").insert(recipe_category);
+          await trx("recipe_categories").insert(recipe_category);
         } catch (err) {
           res.status(400).json(err);
         }
@@ -64,7 +65,7 @@ async function addRecipe(recipe) {
       stepsToAdd.push(newStep);
     });
     try {
-      await db("steps").insert(stepsToAdd);
+      await trx("steps").insert(stepsToAdd);
     } catch (err) {
       res.status(400).json(err);
     }
@@ -79,7 +80,7 @@ async function addRecipe(recipe) {
       ingredientsToAdd.push(newIngredient);
     });
     try {
-      await db("ingredients").insert(ingredientsToAdd);
+      await trx("ingredients").insert(ingredientsToAdd);
     } catch (err) {
       res.status(400).json(err);
     }
@@ -97,6 +98,7 @@ async function updateRecipe(recipe) {
       source: recipe.source,
       image: recipe.image,
       user_id: recipe.user_id,
+      description: recipe.description
     };
 
     try {
@@ -195,6 +197,7 @@ function buildRecipe(rawData) {
     user_id: rawData[0].user_id,
     title: rawData[0].title,
     source: rawData[0].source,
+    description: rawData[0].description,
     image: rawData[0].image,
     categories: [],
     steps: [],
@@ -260,6 +263,7 @@ async function getRecipeById(recipe_id) {
       "r.recipe_id",
       "r.title",
       "r.source",
+      "r.description",
       "r.image",
       "r.user_id",
       "cat.category_name",
