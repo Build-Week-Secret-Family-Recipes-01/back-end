@@ -12,14 +12,14 @@ Endpoints:
 - [PUT] "/api/users/:user_id" - updates user, returns updated user data for that user_id - **must send in username, permissions, password
 - [GET] "/api/users/" - returns an array with all users (user_id, username, password, permissions) - **must be a logged in admin to view
 - [GET] "/api/users/:user_id" - returns data for that user_id (user_id, username, password, permissions) - **must be a logged in admin to view
-- [GET] "/api/recipes" - returns array of ALL recipes in the db (not ingredients or steps though, just general info)
 - [GET] "/api/users/:user_id/recipes" - returns array of the recipes owned by that user_id (not ingredients or steps though, just general info)
+- [DELETE] "/api/user/:user_id" - deletes this user and all of their recipes, returns nothing
+- [GET] "/api/recipes" - returns array of ALL recipes in the db (not ingredients or steps though, just general info)
 - [GET] "/api/recipes/:recipe_id" - returns full data for that recipe
 - [GET] "/api/recipes/category/:category_id" - returns basic recipe info for recipes in that category (Ex: 1 is the Breakfast category )
 - [POST] "/api/recipes" - creates recipe, returns your newly created recipe
 - [DELETE] "/api/recipes/:recipe_id" - deletes this recipe, returns nothing
 - [PUT] "/api/recipes/:recipe_id" - UPDATES the recipe - returns the updated recipe (not updating steps or ingredients, needs troubleshoot) ***Please send the entire recipe object, with all steps and ingredients
-- [DELETE] "/api/user/:user_id" - deletes this user and all of their recipes, returns nothing
 
 Postman JSON link to test endpoints:
 https://www.getpostman.com/collections/6544911aee1368014d50
