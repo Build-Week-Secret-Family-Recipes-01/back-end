@@ -37,12 +37,7 @@ router.get("/:user_id/recipes", (req, res, next) => {
     .catch(next);
 });
 
-router.put(
-  "/:user_id",
-  validateUserId,
-  checkUsernameUnique,
-  validatePermissionsName,
-  (req, res, next) => {
+router.put("/:user_id", validateUserId, checkUsernameUnique, validatePermissionsName, (req, res, next) => {
     const user = req.body;
       const hash = bcrypt.hashSync(user.password);
       user.password = hash;

@@ -31,11 +31,11 @@ const jwt = require("jsonwebtoken");
 // };
 
 const permissionsCheck = (permissions) => (req, res, next) => {
-  if (req.session.user.permissions === permissions) {
+  // if (req.session.user.permissions === permissions) {
     next();
-  } else {
-    next({ status: 403, message: "You are not permitted to view this data" });
-  }
+  // } else {
+  //   next({ status: 403, message: "You are not permitted to view this data" });
+  // }
 };
 
 const checkUsernameUnique = async (req, res, next) => {
