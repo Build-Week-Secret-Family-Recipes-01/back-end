@@ -1,4 +1,6 @@
-This is the back-end database for a recipe-app.
+https://secret-family-recipes-01.herokuapp.com/
+
+This is the back-end database for a recipe-app, deployed on Heroku.
 Passwords are hashed and data is managed with JWT tokens.
 
 There are 6 tables to manage data with the following layout:
