@@ -3,38 +3,38 @@ Passwords are hashed and data is managed with JWT tokens.
 
 There are 6 tables to manage data with the following layout:
 1. users table:
--- user_id
--- username
--- password
--- permissions (admin v. user)
+- user_id
+- username
+- password
+- permissions (admin v. user)
 
 2. recipes table:
--- recipe_id
--- title
--- source
--- image
--- user_id (foreign key)
+- recipe_id
+- title
+- source
+- image
+- user_id (foreign key)
 
 3. recipe_categories table:
--- recipe_category_id
--- recipe_id (foreign key)
--- category_id (foreign key)
+- recipe_category_id
+- recipe_id (foreign key)
+- category_id (foreign key)
 
 4. categories table:
--- category_id
--- category_name
+- category_id
+- category_name
 
 5. ingredients table:
--- ingredient_id
--- ingredient_name
--- quantity
--- recipe_id (foreign key)
+- ingredient_id
+- ingredient_name
+- quantity
+- recipe_id (foreign key)
 
 6. steps table
--- step_id
--- step_text
--- step_number
--- recipe_id (foreign key)
+- step_id
+- step_text
+- step_number
+- recipe_id (foreign key)
 
 
 Test Accounts:
