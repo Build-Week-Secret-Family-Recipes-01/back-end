@@ -1,8 +1,47 @@
+This is the back-end database for a recipe-app.
+Passwords are hashed and data is managed with JWT tokens.
+
+There are 6 tables to manage data with the following layout:
+1. users table:
+-- user_id
+-- username
+-- password
+-- permissions (admin v. user)
+
+2. recipes table:
+-- recipe_id
+-- title
+-- source
+-- image
+-- user_id (foreign key)
+
+3. recipe_categories table:
+-- recipe_category_id
+-- recipe_id (foreign key)
+-- category_id (foreign key)
+
+4. categories table:
+-- category_id
+-- category_name
+
+5. ingredients table:
+-- ingredient_id
+-- ingredient_name
+-- quantity
+-- recipe_id (foreign key)
+
+6. steps table
+-- step_id
+-- step_text
+-- step_number
+-- recipe_id (foreign key)
+
 
 Test Accounts:
 - username: admin | pw: test | admin
 - username: user1 | pw: test
 - username: user2 | pw: test
+
 
 Endpoints:
 - [BackEnd Base URL] https://secret-family-recipes-01.herokuapp.com/
