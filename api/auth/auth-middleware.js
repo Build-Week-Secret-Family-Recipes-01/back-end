@@ -97,16 +97,12 @@ const validateUserId = async (req, res, next) => {
 };
 
 const privateRecipeCheck = async (req, res, next) => {
-  try {
-    if (req.session.user.permissions === "admin") {
-      next();
-    } else if (req.session.user.user_id === +req.params.user_id) {
-      next();
-    } else {
-      res.status(403).json({ message: "You do not own or have permission to view this data." });
-    }
-  } catch (err) {
-    next(err);
+  if (req.decodedJwt.permissions === "admin") {
+    next();
+  } else if (req.decodedJwt.subject === +req.params.user_id) {
+    next();
+  } else {
+    next({ status: 403, message: "You do not own or have permission to view this data." });
   }
 }
 
