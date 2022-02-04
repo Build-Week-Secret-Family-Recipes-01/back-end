@@ -57,7 +57,7 @@ Endpoints:
 - [GET] "/api/recipes/category/:category_id" - returns basic recipe info for recipes in that category (Ex: 1 is the Breakfast category )
 - [POST] "/api/recipes" - creates recipe, returns your newly created recipe
 - [DELETE] "/api/recipes/:recipe_id" - deletes this recipe, returns nothing
-- [PUT] "/api/recipes/:recipe_id" - UPDATES the recipe - returns the updated recipe (not updating steps or ingredients, needs troubleshoot) ***Please send the entire recipe object, with all steps and ingredients
+- [PUT] "/api/recipes/:recipe_id" - UPDATES the recipe - returns the updated recipe ***Please send the entire recipe object, with all steps and ingredients
 
 Postman JSON link to test endpoints:
 https://www.getpostman.com/collections/6544911aee1368014d50
